@@ -6,6 +6,19 @@ namespace Hangman
 {
     class StringMethods
     {
+
+        public static char[] GetCharArrayWithChar(int lengthOfArray, char charToAddInArray = '_')
+        {
+            var charArray = new char[lengthOfArray];
+
+            for (int i = 0; i < lengthOfArray; i++)
+            {
+                charArray[i] = charToAddInArray;
+            }
+
+            return charArray;
+        }
+
         public static bool StringBuilderContainsLetter(StringBuilder stringBuilder, char letter)
         {
             for (int i = 0; i < stringBuilder.Length; i++)

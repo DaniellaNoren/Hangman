@@ -68,16 +68,16 @@ namespace Hangman
             StringBuilder guessedLetters = new StringBuilder();
 
             int guesses = 0;
-            var charArray = GetCharArray(wordToBeGuessed);
+            var charArray = StringMethods.GetCharArrayWithChar(wordToBeGuessed.Length);    
             bool WordHasBeenGuessed = false;
 
             while (guesses < numberOfTrys && !WordHasBeenGuessed)
             {
-                StringMethods.PrintCharArray(charArray);                      // Print the word to the user
+                StringMethods.PrintCharArray(charArray);                                                // Print the word to the user
                 
-                Console.WriteLine("\n" + guessedLetters);                     // Print all the already guessed letter
+                Console.WriteLine("\n" + guessedLetters);                                               // Print all the already guessed letter
 
-                var guess = GetPlayerInput();                                 // Get the guess from the user
+                var guess = GetPlayerInput();                                                           // Get the guess from the user
 
                 if (guess.Length == 1) 
                 {
@@ -106,30 +106,17 @@ namespace Hangman
                     }
 
                 }
-                else if (guess.Equals(wordToBeGuessed))   // If player has guessed the entire word
+                else if (guess.Equals(wordToBeGuessed))                                                     // If player has guessed the entire word
                 {
                     WordHasBeenGuessed = true;
                 }
                 else
                 {
-                    guesses++;                           // Guess is wrong
+                    guesses++;                                                                              // Guess is wrong
                 }
             }
 
             return guesses < numberOfTrys;
-        }
-
-        private char[] GetCharArray(string word)
-        {
-            var wordLength = word.Length;
-            var charArray = new char[wordLength];
-
-            for (int i = 0; i < wordLength; i++)
-            {
-                charArray[i] = '_';
-            }
-
-            return charArray;
         }
 
         private string GetPlayerInput()
