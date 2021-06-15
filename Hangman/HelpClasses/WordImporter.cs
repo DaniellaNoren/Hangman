@@ -7,7 +7,7 @@ namespace Hangman
 {
     public class WordImporter 
     {
-        public List<string> words { get; set; }
+        public List<string> Words { get; set; }
         public string PathToFile { get; set; }
 
         private static readonly Random random = new Random();
@@ -19,23 +19,23 @@ namespace Hangman
 
         public string GetOneWord()
         {
-            if (words == null) throw new ArgumentNullException("Words are yet not imported");
+            if (Words == null) throw new ArgumentNullException("Words are yet not imported");
 
-            return words[random.Next(words.Count)];
+            return Words[random.Next(Words.Count)];
         }
 
         public List<string> SetWordsManually(string[] defaultWords)
         {
-            words = new List<string>(defaultWords);
+            Words = new List<string>(defaultWords);
 
-            return words;
+            return Words;
         }
 
         public List<string> ImportWordsFromFile()
         {
             if (!File.Exists(PathToFile)) throw new FileNotFoundException("File not found");
 
-            words = new List<string>();
+            Words = new List<string>();
 
             string line;
 
@@ -46,13 +46,13 @@ namespace Hangman
                     var arr = line.Split(",");
                     foreach (var word in arr)
                     {
-                        words.Add(word.Trim());
+                        Words.Add(word.Trim());
                     }
                     
                 }
             }
 
-            return words;
+            return Words;
         }
     }
 }

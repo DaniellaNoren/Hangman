@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hangman
 {
-    class StringMethods
+    public class StringMethods
     {
 
         public static char[] GetCharArrayWithChar(int lengthOfArray, char charToAddInArray = '_')
