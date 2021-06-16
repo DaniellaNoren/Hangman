@@ -23,4 +23,10 @@
     <ProjectReference Include="..\Hangman\Hangman.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestFiles\Words.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
