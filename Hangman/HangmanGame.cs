@@ -10,18 +10,35 @@ namespace Hangman
     {
         private readonly WordImporter wordImporter;
         private readonly int numberOfTrys = 10;
-        private readonly StringBuilder guessedLetters;
+        private readonly StringBuilder allGuessedLetters;
 
         public HangmanGame(WordImporter wordImporter)
         {
             this.wordImporter = wordImporter;
-            this.guessedLetters = new StringBuilder();
+            this.allGuessedLetters = new StringBuilder();
         }
 
         public void StartGame()
         {
             SetUpWords();
             GameLoop();
+        }
+
+        private void SetUpWords()
+        {
+            try
+            {
+                wordImporter.ImportWordsFromFile();
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("File not found, using default words");
+
+                wordImporter.SetWordsManually(new string[] { "ARBETSFÖRMEDLINGEN", "FÖRBUNDSKAPTEN", "RESERVPLATS",
+                    "NORDVÄSTERSJÖKUSTARTILLERIFLYGSPANINGSSIMULATORANLÄGGNINGSMATERIELUNDERHÅLLSUPPFÖLJNINGSSYSTEMDISKUSSIONSINLÄGGSFÖRBEREDELSEARBETE",
+                    "STACKOVERFLOW", "HANGMAN", "VÄGGISOLERING", "GUMMIDÄCK", "STORMVIND", "DADDLAR" });
+            }
+
         }
 
         private void GameLoop()
@@ -32,7 +49,7 @@ namespace Hangman
 
             do
             {
-                guessedLetters.Clear();
+                allGuessedLetters.Clear();
 
                 string word = wordImporter.GetOneWord();
                 bool wonGame = GuessWord(word);
@@ -53,77 +70,80 @@ namespace Hangman
         }
 
 
-        private void SetUpWords()
-        {
-            try
-            {
-                wordImporter.ImportWordsFromFile();
-            }
-            catch (FileNotFoundException)
-            {
-                Console.WriteLine("File not found, using default words");
-
-                wordImporter.SetWordsManually(new string[] { "ARBETSFÖRMEDLINGEN", "FÖRBUNDSKAPTEN", "RESERVPLATS",
-                    "NORDVÄSTERSJÖKUSTARTILLERIFLYGSPANINGSSIMULATORANLÄGGNINGSMATERIELUNDERHÅLLSUPPFÖLJNINGSSYSTEMDISKUSSIONSINLÄGGSFÖRBEREDELSEARBETE",
-                    "STACKOVERFLOW", "HANGMAN", "VÄGGISOLERING", "GUMMIDÄCK", "STORMVIND", "DADDLAR" });
-            }
-
-        }
 
         private bool GuessWord(string wordToBeGuessed)
         {
             wordToBeGuessed = wordToBeGuessed.ToUpper();
            
-            int guesses = 0;
-            char[] charArray = StringMethods.GetCharArrayWithChar(wordToBeGuessed.Length);    
+            int nrOfGuesses = 0;
+            char[] correctlyGuessedLetters = StringMethods.GetCharArrayWithChar(wordToBeGuessed.Length);    
             bool WordHasBeenGuessed = false;
 
-            while (guesses < numberOfTrys && !WordHasBeenGuessed)
+            while (nrOfGuesses < numberOfTrys && !WordHasBeenGuessed)
             {
-                StringMethods.PrintCharArray(charArray);                                                // Print the word to the user
+                StringMethods.PrintCharArray(correctlyGuessedLetters);                                                
                 
-                Console.WriteLine("\n" + guessedLetters);                                               // Print all the already guessed letter
+                Console.WriteLine("\n" + allGuessedLetters);                                               
 
-                string guess = GetPlayerInput();                                                        // Get the guess from the user
+                string guess = GetPlayerInput();
 
-                if (guess.Length == 1) 
+                CheckGuess(ref WordHasBeenGuessed, ref nrOfGuesses, guess, wordToBeGuessed, ref correctlyGuessedLetters);
+         
+            }
+
+            return nrOfGuesses < numberOfTrys;
+        }
+
+        public void CheckGuess(ref bool wordHasBeenGuessed, ref int nrOfGuesses, string guess, string wordToBeGuessed, ref char[] correctlyGuessedLetters)
+        {
+            
+            if (guess.Length == 1)
+            {
+                char guessedLetter = guess[0];
+
+                if (StringMethods.StringBuilderContainsLetter(allGuessedLetters, guessedLetter))
                 {
-                    char guessedLetter = guess[0];
-
-                    if (StringMethods.StringBuilderContainsLetter(guessedLetters, guessedLetter))  
-                    {
-                        Console.WriteLine("Letter already guessed, try again");
-                        continue;
-                    }
-                    else
-                    {
-                        guessedLetters.Append(guessedLetter);
-                    }
-
-                    List<int> indexes = StringMethods.IndexesOf(wordToBeGuessed, guessedLetter);                    // Get the indexes of the letter in the word
-
-                    if (indexes.Count > 0)                                                                          // If there are any indexes
-                    {
-                        StringMethods.SetLetterInIndexes(indexes, ref charArray, guessedLetter);                    //Update char array      
-                        WordHasBeenGuessed = StringMethods.StringMatchesCharArray(wordToBeGuessed, charArray);  
-                    } 
-                    else
-                    {
-                        guesses++;
-                    }
-
-                }
-                else if (guess.Equals(wordToBeGuessed))                                                     // If player has guessed the entire word
-                {
-                    WordHasBeenGuessed = true;
+                    Console.WriteLine("Letter already guessed, try again");
+                    return;
                 }
                 else
                 {
-                    guesses++;                                                                              // Guess is wrong
+                    allGuessedLetters.Append(guessedLetter);
                 }
+
+                if (GuessedLetterIsCorrect(ref correctlyGuessedLetters, guessedLetter, wordToBeGuessed))
+                {
+                    wordHasBeenGuessed = StringMethods.StringMatchesCharArray(wordToBeGuessed, correctlyGuessedLetters);
+                }
+                else
+                {
+                    nrOfGuesses++;
+                }
+
+            }
+            else if (guess.Equals(wordToBeGuessed))                                                     
+            {
+                wordHasBeenGuessed = true;
+            }
+            else
+            {
+                nrOfGuesses++;                                                                              
             }
 
-            return guesses < numberOfTrys;
+            
+        }
+    
+        public bool GuessedLetterIsCorrect(ref char[] charArray, char guess, string wordToBeGuessed)
+        {
+            List<int> indexes = StringMethods.IndexesOf(wordToBeGuessed, guess);                   
+
+            if (indexes.Count > 0)                                                                         
+            {
+                StringMethods.SetLetterInIndexes(indexes, ref charArray, guess);                   
+
+                return true;
+            }
+           return false;
         }
 
         public string GetPlayerInput()
