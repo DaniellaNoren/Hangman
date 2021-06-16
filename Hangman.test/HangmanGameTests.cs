@@ -62,9 +62,40 @@ namespace Hangman.test
             hangMan.GetPlayerInput();
 
             Assert.Equal(s.ToString().Substring(0, 10), expectedString.Substring(0, 10));
+        }
 
+        [Fact]
+        public void CheckGuess_WrongGuessShouldIncreaseNrOfGuesses()
+        {
+            string word = "BANANKAKA";
+            int nrOfGuesses = 0;
+            char[] correctlyGuessedLetters = StringMethods.GetCharArrayWithChar(word.Length);
+
+            bool wordGuessed = false;
+
+            hangMan.CheckGuess(ref wordGuessed, ref nrOfGuesses, "G", word, ref correctlyGuessedLetters);
+            Assert.Equal(1, nrOfGuesses);
+
+            hangMan.CheckGuess(ref wordGuessed, ref nrOfGuesses, "PANNKAKA", word, ref correctlyGuessedLetters);
+            Assert.Equal(2, nrOfGuesses);
 
         }
+
+        [Fact]
+        public void CheckGuess_CorrectGuessShouldMakeWordGuessedTrue()
+        {
+            string word = "BANANKAKA";
+            int nrOfGuesses = 0;
+            char[] correctlyGuessedLetters = StringMethods.GetCharArrayWithChar(word.Length);
+            bool wordGuessed = false;
+
+            hangMan.CheckGuess(ref wordGuessed, ref nrOfGuesses, word, word, ref correctlyGuessedLetters);
+            Assert.True(wordGuessed);
+
+        }
+
+
+
     }
  
 
