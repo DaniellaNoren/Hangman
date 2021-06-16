@@ -5,7 +5,7 @@ namespace Hangman
     {
         static void Main(string[] args)
         {
-            var game = new HangmanGame(new WordImporter(@"Words.txt"));
+            HangmanGame game = new HangmanGame(new WordImporter(@"Words.txt"));
             game.StartGame();
         }
     }

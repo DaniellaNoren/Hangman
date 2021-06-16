@@ -39,12 +39,12 @@ namespace Hangman
 
             string line;
 
-            using (var s = new StreamReader(PathToFile))
+            using (StreamReader s = new StreamReader(PathToFile))
             {
                 while ((line = s.ReadLine()) != null)
                 {
-                    var arr = line.Split(",");
-                    foreach (var word in arr)
+                    string[] arr = line.Split(",");
+                    foreach (string word in arr)
                     {
                         Words.Add(word.Trim());
                     }

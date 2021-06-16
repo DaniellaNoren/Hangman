@@ -9,7 +9,7 @@ namespace Hangman
 
         public static char[] GetCharArrayWithChar(int lengthOfArray, char charToAddInArray = '_')
         {
-            var charArray = new char[lengthOfArray];
+            char[] charArray = new char[lengthOfArray];
 
             for (int i = 0; i < lengthOfArray; i++)
             {
@@ -31,7 +31,7 @@ namespace Hangman
 
         public static List<int> IndexesOf(string word, char letter)
         {
-            var foundIndexes = new List<int>();
+            List<int> foundIndexes = new List<int>();
 
             for (int i = 0; i < word.Length; i++)
             {
@@ -44,7 +44,7 @@ namespace Hangman
 
         public static void SetLetterInIndexes(List<int> indexes, ref char[] charArray, char letter)
         {
-            foreach (var index in indexes)
+            foreach (int index in indexes)
             {
                 charArray[index] = letter;
             }
@@ -57,7 +57,7 @@ namespace Hangman
 
         public static void PrintCharArray(char[] charArray)
         {
-            foreach (var c in charArray)
+            foreach (char c in charArray)
             {
                 Console.Write(c + "\t");
             }

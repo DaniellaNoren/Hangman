@@ -26,8 +26,8 @@ namespace Hangman
 
             do
             {
-                var word = wordImporter.GetOneWord();
-                var wonGame = GuessWord(word);
+                string word = wordImporter.GetOneWord();
+                bool wonGame = GuessWord(word);
 
                 if (wonGame)
                 {
@@ -68,7 +68,7 @@ namespace Hangman
             StringBuilder guessedLetters = new StringBuilder();
 
             int guesses = 0;
-            var charArray = StringMethods.GetCharArrayWithChar(wordToBeGuessed.Length);    
+            char[] charArray = StringMethods.GetCharArrayWithChar(wordToBeGuessed.Length);    
             bool WordHasBeenGuessed = false;
 
             while (guesses < numberOfTrys && !WordHasBeenGuessed)
@@ -77,7 +77,7 @@ namespace Hangman
                 
                 Console.WriteLine("\n" + guessedLetters);                                               // Print all the already guessed letter
 
-                var guess = GetPlayerInput();                                                           // Get the guess from the user
+                string guess = GetPlayerInput();                                                           // Get the guess from the user
 
                 if (guess.Length == 1) 
                 {
@@ -93,7 +93,7 @@ namespace Hangman
                         guessedLetters.Append(guessedLetter);
                     }
 
-                    var indexes = StringMethods.IndexesOf(wordToBeGuessed, guessedLetter);                  // Get the indexes of the letter in the word
+                    List<int> indexes = StringMethods.IndexesOf(wordToBeGuessed, guessedLetter);                  // Get the indexes of the letter in the word
 
                     if (indexes.Count > 0)                                                                  // If there are any indexes
                     {
