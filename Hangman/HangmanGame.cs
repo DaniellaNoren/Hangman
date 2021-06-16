@@ -10,22 +10,30 @@ namespace Hangman
     {
         private readonly WordImporter wordImporter;
         private readonly int numberOfTrys = 10;
+        private readonly StringBuilder guessedLetters;
 
         public HangmanGame(WordImporter wordImporter)
         {
             this.wordImporter = wordImporter;
+            this.guessedLetters = new StringBuilder();
         }
 
         public void StartGame()
         {
-            SetUp();
+            SetUpWords();
+            GameLoop();
+        }
 
+        private void GameLoop()
+        {
             string input;
 
             Console.WriteLine("Welcome to Hangman! Enter a letter or word to guess!");
 
             do
             {
+                guessedLetters.Clear();
+
                 string word = wordImporter.GetOneWord();
                 bool wonGame = GuessWord(word);
 
@@ -42,10 +50,10 @@ namespace Hangman
                 input = Console.ReadLine();
 
             } while (input != "-1");
-
         }
 
-        private void SetUp()
+
+        private void SetUpWords()
         {
             try
             {
@@ -65,8 +73,7 @@ namespace Hangman
         private bool GuessWord(string wordToBeGuessed)
         {
             wordToBeGuessed = wordToBeGuessed.ToUpper();
-            StringBuilder guessedLetters = new StringBuilder();
-
+           
             int guesses = 0;
             char[] charArray = StringMethods.GetCharArrayWithChar(wordToBeGuessed.Length);    
             bool WordHasBeenGuessed = false;
@@ -77,7 +84,7 @@ namespace Hangman
                 
                 Console.WriteLine("\n" + guessedLetters);                                               // Print all the already guessed letter
 
-                string guess = GetPlayerInput();                                                           // Get the guess from the user
+                string guess = GetPlayerInput();                                                        // Get the guess from the user
 
                 if (guess.Length == 1) 
                 {
@@ -93,11 +100,11 @@ namespace Hangman
                         guessedLetters.Append(guessedLetter);
                     }
 
-                    List<int> indexes = StringMethods.IndexesOf(wordToBeGuessed, guessedLetter);                  // Get the indexes of the letter in the word
+                    List<int> indexes = StringMethods.IndexesOf(wordToBeGuessed, guessedLetter);                    // Get the indexes of the letter in the word
 
-                    if (indexes.Count > 0)                                                                  // If there are any indexes
+                    if (indexes.Count > 0)                                                                          // If there are any indexes
                     {
-                        StringMethods.SetLetterInIndexes(indexes, ref charArray, guessedLetter);            //Update char array      
+                        StringMethods.SetLetterInIndexes(indexes, ref charArray, guessedLetter);                    //Update char array      
                         WordHasBeenGuessed = StringMethods.StringMatchesCharArray(wordToBeGuessed, charArray);  
                     } 
                     else
@@ -119,7 +126,7 @@ namespace Hangman
             return guesses < numberOfTrys;
         }
 
-        private string GetPlayerInput()
+        public string GetPlayerInput()
         {
             bool correctInput = false;
             string playerInput = "";
@@ -131,7 +138,7 @@ namespace Hangman
                     playerInput = Console.ReadLine().ToUpper().Trim();
                     correctInput = CheckForValidInput(playerInput);
                 }
-                catch (NullReferenceException)
+                catch (ArgumentNullException)
                 {
                     Console.WriteLine("Input cannot be empty.");
                 }
@@ -144,7 +151,7 @@ namespace Hangman
             return playerInput;
         }
 
-        private bool CheckForValidInput(string word)
+        public bool CheckForValidInput(string word)
         {
             if (null == word || word.Equals(""))
                 throw new ArgumentNullException();

@@ -14,7 +14,7 @@ namespace Hangman
 
         public WordImporter(string pathToFile)
         {
-            this.PathToFile = pathToFile;
+            PathToFile = pathToFile;
         }
 
         public string GetOneWord()

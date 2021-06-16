@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hangman
 {
-    class InvalidUserInputException : Exception
+    public class InvalidUserInputException : Exception
     {
 
         public InvalidUserInputException(string message) : base(message){}
