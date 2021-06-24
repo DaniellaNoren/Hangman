@@ -106,10 +106,6 @@ namespace Hangman
                     Console.WriteLine("Letter already guessed, try again");
                     return;
                 }
-                else
-                {
-                    allGuessedLetters.Append(guessedLetter);
-                }
 
                 if (GuessedLetterIsCorrect(ref correctlyGuessedLetters, guessedLetter, wordToBeGuessed))
                 {
@@ -117,6 +113,7 @@ namespace Hangman
                 }
                 else
                 {
+                    allGuessedLetters.Append(guessedLetter);
                     nrOfGuesses++;
                 }
 
